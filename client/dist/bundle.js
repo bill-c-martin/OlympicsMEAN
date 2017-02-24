@@ -7,7 +7,9 @@ var _angular2 = _interopRequireDefault(_angular);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_angular2.default.module('olympics', []);
+_angular2.default.module('olympics', []).controller('sportsController', function () {
+	this.sports = ['Weightlifting', 'Cycling'];
+});
 
 },{"angular":3}],2:[function(require,module,exports){
 /**
