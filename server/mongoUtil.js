@@ -14,5 +14,8 @@ module.exports = {
 			_db = db;
 			console.log('Connected to Mongo');
 		});
+	},
+	sports(){
+		return _db.collection('sports');
 	}
 }
