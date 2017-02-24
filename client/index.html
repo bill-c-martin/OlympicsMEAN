@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html ng-app="olympics">
+<head>
+	<title>Olympics</title>
+	<script src="dist/bundle.js"></script>
+</head>
+<body>
+<h1>Olympics</h1>
+
+<ul ng-controller="sportsController as sportsCtrl">
+	<li ng-repeat="sport in sportsCtrl.sports">{{ sport }}</li>
+</ul>
+
+</body>
+</html>
