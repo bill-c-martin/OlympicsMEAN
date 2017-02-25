@@ -1,9 +1,10 @@
 "use strict";
 
-let express = require("express");
-let app = express();
-
-let mongoUtil = require('./mongoUtil');
+let express    = require("express");
+let app        = express();
+let bodyParser = require('body-parser')
+let jsonParser = bodyParser.json();
+let mongoUtil  = require('./mongoUtil');
 
 mongoUtil.connect();
 
@@ -25,7 +26,7 @@ app.get("/sports", (request, response) => {
 
 app.get("/sports/:name", (request, response) => {
 	let sportName = request.params.name;
-	let sports = mongoUtil.sports();
+	let sports    = mongoUtil.sports();
 	
 	sports.find({name: sportName}).limit(1).next((err, doc) => {
 		if(err) {
@@ -36,6 +37,17 @@ app.get("/sports/:name", (request, response) => {
 		response.json(doc);
 
 	});
+});
+
+app.post("/sports/:name/medals", jsonParser, (request, response) => {
+	let sportName = request.params.name;
+	let newMedal  = request.body.medal;
+
+	console.log("Sport name: ", sportName);
+	console.log("Medal name: ", newMedal);
+
+	response.sendStatus(201);
+
 });
 
 app.listen(8181, () => console.log("Listening on 8181"));
