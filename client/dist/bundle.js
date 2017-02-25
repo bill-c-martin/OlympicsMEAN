@@ -15,12 +15,13 @@ _angular2.default.module('olympics', ["ui.router"]).config(function ($stateProvi
 	$stateProvider.state('sports', {
 		url: '/sports',
 		templateUrl: 'sports/sports-nav.html',
-		controller: function controller($http) {
-			var _this = this;
-
-			$http.get('/sports').then(function (response) {
-				_this.sports = response.data;
-			});
+		resolve: {
+			sportsService: function sportsService($http) {
+				return $http.get('/sports');
+			}
+		},
+		controller: function controller(sportsService) {
+			this.sports = sportsService.data;
 		},
 		controllerAs: 'sportsCtrl'
 	}).state('sports.medals', {

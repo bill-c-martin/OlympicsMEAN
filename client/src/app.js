@@ -9,10 +9,13 @@ angular.module('olympics', ["ui.router"])
 			.state('sports', {
 				url: '/sports',
 				templateUrl: 'sports/sports-nav.html',
-				controller: function($http){
-					$http.get('/sports').then((response) => {
-						this.sports = response.data;
-					});
+				resolve: {
+					sportsService: function($http){
+						return $http.get('/sports');
+					}
+				},
+				controller: function(sportsService){
+					this.sports = sportsService.data;
 				},
 				controllerAs: 'sportsCtrl'
 			})
