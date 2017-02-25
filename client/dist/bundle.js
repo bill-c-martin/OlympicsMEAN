@@ -41,6 +41,9 @@ _angular2.default.module('olympics', ["ui.router"]).config(function ($stateProvi
     templateUrl: 'sports/new-medal.html',
     controller: function controller($stateParams) {
       this.sportName = $stateParams.sportName;
+      this.saveMedal = function (medal) {
+        console.log('Submitting medal:', medal);
+      };
     },
     controllerAs: 'newMedalCtrl'
   });
