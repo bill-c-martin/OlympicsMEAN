@@ -10,33 +10,71 @@ require('angular-ui-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _angular2.default.module('olympics', ["ui.router"]).config(function ($stateProvider, $urlRouterProvider) {
-	$urlRouterProvider.otherwise('/sports');
+  $urlRouterProvider.otherwise('/sports');
 
-	$stateProvider.state('sports', {
-		url: '/sports',
-		templateUrl: 'sports/sports-nav.html',
-		resolve: {
-			sportsService: function sportsService($http) {
-				return $http.get('/sports');
-			}
-		},
-		controller: function controller(sportsService) {
-			this.sports = sportsService.data;
-		},
-		controllerAs: 'sportsCtrl'
-	}).state('sports.medals', {
-		url: '/:sportName',
-		templateUrl: 'sports/sports-medals.html',
-		resolve: {
-			sportService: function sportService($http, $stateParams) {
-				return $http.get('/sports/' + $stateParams.sportName);
-			}
-		},
-		controller: function controller(sportService) {
-			this.sport = sportService.data;
-		},
-		controllerAs: 'sportCtrl'
-	});
+  $stateProvider
+  // Sports navigation, default state
+  .state('sports', {
+    url: '/sports',
+    templateUrl: 'sports/sports-nav.html',
+    resolve: {
+      sportsService: function sportsService($http) {
+        return $http.get('/sports');
+      }
+    },
+    controller: function controller(sportsService, $location) {
+      this.sports = sportsService.data;
+
+      this.isActive = function (sport) {
+        var pathRegexp = /sports\/(\w+)/;
+        var match = pathRegexp.exec($location.path());
+
+        if (match === null || match.length === 0) {
+          return false;
+        }
+
+        var selectedSportName = match[1];
+
+        return sport === selectedSportName;
+      };
+    },
+    controllerAs: 'sportsCtrl'
+  })
+
+  // Print medals for a particular sport
+  .state('sports.medals', {
+    url: '/:sportName',
+    templateUrl: 'sports/sports-medals.html',
+    resolve: {
+      sportService: function sportService($http, $stateParams) {
+        return $http.get('/sports/' + $stateParams.sportName);
+      }
+    },
+    controller: function controller(sportService) {
+      this.sport = sportService.data;
+    },
+    controllerAs: 'sportCtrl'
+  })
+
+  // Create new medals
+  .state('sports.new', {
+    url: '/:sportName/medal/new',
+    templateUrl: 'sports/new-medal.html',
+    controller: function controller($stateParams, $state, $http) {
+      this.sportName = $stateParams.sportName;
+
+      this.saveMedal = function (medal) {
+        $http({
+          method: 'POST',
+          url: '/sports/' + $stateParams.sportName + '/medals',
+          data: { medal: medal }
+        }).then(function () {
+          $state.go('sports.medals', { sportName: $stateParams.sportName });
+        });
+      };
+    },
+    controllerAs: 'newMedalCtrl'
+  });
 });
 
 },{"angular":4,"angular-ui-router":2}],2:[function(require,module,exports){
