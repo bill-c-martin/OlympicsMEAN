@@ -10,33 +10,36 @@ require('angular-ui-router');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _angular2.default.module('olympics', ["ui.router"]).config(function ($stateProvider, $urlRouterProvider) {
-	$urlRouterProvider.otherwise('/sports');
+  $urlRouterProvider.otherwise('/sports');
 
-	$stateProvider.state('sports', {
-		url: '/sports',
-		templateUrl: 'sports/sports-nav.html',
-		resolve: {
-			sportsService: function sportsService($http) {
-				return $http.get('/sports');
-			}
-		},
-		controller: function controller(sportsService) {
-			this.sports = sportsService.data;
-		},
-		controllerAs: 'sportsCtrl'
-	}).state('sports.medals', {
-		url: '/:sportName',
-		templateUrl: 'sports/sports-medals.html',
-		resolve: {
-			sportService: function sportService($http, $stateParams) {
-				return $http.get('/sports/' + $stateParams.sportName);
-			}
-		},
-		controller: function controller(sportService) {
-			this.sport = sportService.data;
-		},
-		controllerAs: 'sportCtrl'
-	});
+  $stateProvider.state('sports', {
+    url: '/sports',
+    templateUrl: 'sports/sports-nav.html',
+    resolve: {
+      sportsService: function sportsService($http) {
+        return $http.get('/sports');
+      }
+    },
+    controller: function controller(sportsService) {
+      this.sports = sportsService.data;
+    },
+    controllerAs: 'sportsCtrl'
+  }).state('sports.medals', {
+    url: '/:sportName',
+    templateUrl: 'sports/sports-medals.html',
+    resolve: {
+      sportService: function sportService($http, $stateParams) {
+        return $http.get('/sports/' + $stateParams.sportName);
+      }
+    },
+    controller: function controller(sportService) {
+      this.sport = sportService.data;
+    },
+    controllerAs: 'sportCtrl'
+  }).state('sports.new', {
+    url: '/:sportName/medal/new',
+    templateUrl: 'sports/new-medal.html'
+  });
 });
 
 },{"angular":4,"angular-ui-router":2}],2:[function(require,module,exports){
