@@ -9,7 +9,14 @@ require('angular-ui-router');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_angular2.default.module('olympics', ["ui.router"]).controller('sportsController', function ($http) {
+_angular2.default.module('olympics', ["ui.router"]).config(function ($stateProvider, $urlRouterProvider) {
+	$urlRouterProvider.otherwise('/sports');
+
+	$stateProvider.state('sports', {
+		url: '/sports',
+		templateUrl: 'sports/sports-nav.html'
+	});
+}).controller('sportsController', function ($http) {
 	var _this = this;
 
 	$http.get('/sports').then(function (response) {
