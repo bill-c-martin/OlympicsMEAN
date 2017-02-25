@@ -14,6 +14,10 @@ app.get("/sports", (request, response) => {
 	let sports = mongoUtil.sports();
 
 	sports.find().toArray((err, docs) => {
+		if(err) {
+			response.sendStatus(400);
+		}
+
 		let sportNames = docs.map((sport) => sport.name)
 		response.json(sportNames);
 	});
@@ -21,22 +25,17 @@ app.get("/sports", (request, response) => {
 
 app.get("/sports/:name", (request, response) => {
 	let sportName = request.params.name;
-	console.log("Sport name: ", sportName);
+	let sports = mongoUtil.sports();
+	
+	sports.find({name: sportName}).limit(1).next((err, doc) => {
+		if(err) {
+			response.sendStatus(400);
+		}
 
-	let sport = {
-		"name": "Cycling",
-		"goldMedals": [{
-			"division": "Men's Sprint",
-			"country": "UK",
-			"year": 2012
-		},{
-			"division": "Women's Sprint",
-			"country": "Australia",
-			"year": 2012
-		}]
-	};
+		console.log("Sport doc: ", doc);
+		response.json(doc);
 
-	response.json(sport);
+	});
 });
 
 app.listen(8181, () => console.log("Listening on 8181"));
