@@ -12,7 +12,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _angular2.default.module('olympics', ["ui.router"]).config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/sports');
 
-  $stateProvider.state('sports', {
+  $stateProvider
+  // Sports navigation, default state
+  .state('sports', {
     url: '/sports',
     templateUrl: 'sports/sports-nav.html',
     resolve: {
@@ -24,7 +26,10 @@ _angular2.default.module('olympics', ["ui.router"]).config(function ($stateProvi
       this.sports = sportsService.data;
     },
     controllerAs: 'sportsCtrl'
-  }).state('sports.medals', {
+  })
+
+  // Print medals for a particular sport
+  .state('sports.medals', {
     url: '/:sportName',
     templateUrl: 'sports/sports-medals.html',
     resolve: {
@@ -36,13 +41,20 @@ _angular2.default.module('olympics', ["ui.router"]).config(function ($stateProvi
       this.sport = sportService.data;
     },
     controllerAs: 'sportCtrl'
-  }).state('sports.new', {
+  })
+
+  // Create new medals
+  .state('sports.new', {
     url: '/:sportName/medal/new',
     templateUrl: 'sports/new-medal.html',
-    controller: function controller($stateParams) {
+    controller: function controller($stateParams, $state) {
       this.sportName = $stateParams.sportName;
       this.saveMedal = function (medal) {
+        // Submit form - implement in express later
         console.log('Submitting medal:', medal);
+        console.log('state params sport name is:', $stateParams.sportName);
+
+        $state.go('sports.medals', { sportName: $stateParams.sportName });
       };
     },
     controllerAs: 'newMedalCtrl'

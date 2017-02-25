@@ -6,7 +6,7 @@ angular.module('olympics', ["ui.router"])
     $urlRouterProvider.otherwise('/sports')
 
     $stateProvider
-
+      // Sports navigation, default state
       .state('sports', {
         url: '/sports',
         templateUrl: 'sports/sports-nav.html',
@@ -21,6 +21,7 @@ angular.module('olympics', ["ui.router"])
         controllerAs: 'sportsCtrl'
       })
 
+      // Print medals for a particular sport
       .state('sports.medals', {
         url: '/:sportName',
         templateUrl: 'sports/sports-medals.html',
@@ -34,13 +35,19 @@ angular.module('olympics', ["ui.router"])
         },
         controllerAs: 'sportCtrl'
       })
+
+      // Create new medals
       .state('sports.new', {
         url: '/:sportName/medal/new',
         templateUrl: 'sports/new-medal.html',
-        controller: function($stateParams){
+        controller: function($stateParams, $state){
           this.sportName = $stateParams.sportName;
           this.saveMedal = function(medal){
+            // Submit form - implement in express later
             console.log('Submitting medal:', medal);
+            console.log('state params sport name is:', $stateParams.sportName);
+            
+            $state.go('sports.medals', {sportName: $stateParams.sportName});
           };
         },
         controllerAs: 'newMedalCtrl'
