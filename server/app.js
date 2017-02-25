@@ -11,6 +11,7 @@ mongoUtil.connect();
 app.use( express.static(__dirname + "/../client") );
 app.use( '/node_modules', express.static(__dirname + "/../node_modules") );
 
+// Get all sports
 app.get("/sports", (request, response) => {
 	let sports = mongoUtil.sports();
 
@@ -24,6 +25,7 @@ app.get("/sports", (request, response) => {
 	});
 });
 
+// Get the medals for a particular sport
 app.get("/sports/:name", (request, response) => {
 	let sportName = request.params.name;
 	let sports    = mongoUtil.sports();
@@ -39,15 +41,22 @@ app.get("/sports/:name", (request, response) => {
 	});
 });
 
+// Create new medal
 app.post("/sports/:name/medals", jsonParser, (request, response) => {
 	let sportName = request.params.name;
 	let newMedal  = request.body.medal;
 
-	console.log("Sport name: ", sportName);
-	console.log("Medal name: ", newMedal);
+	// Store medal in DB
+	let sports    = mongoUtil.sports();
+	let query     = { name: sportName };
+	let update    = { $push: { goldMedals: newMedal } };
 
-	response.sendStatus(201);
-
+	sports.findOneAndUpdate(query, update, (err, res) => {
+		if(err) {
+			response.sendStatus(400);
+		}
+		response.sendStatus(201);
+	});
 });
 
 app.listen(8181, () => console.log("Listening on 8181"));
